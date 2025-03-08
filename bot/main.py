@@ -14,7 +14,7 @@ dp = Dispatcher()
 # Обработчик команды /start
 @dp.message(Command("start"))
 async def start_command(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.first_name}! Я твой Telegram-бот 🤖")
+    await message.answer(f"Привет, {message.from_user.first_name}! Я твой Telegram-бот 🤖 \n Настало время творить магию!")
 
 # Обработчик команды /help
 @dp.message(Command("help"))
