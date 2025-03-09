@@ -36,4 +36,4 @@ def get_services():
             "duration": row["Временной слот"]
         })
 
-     return json.dumps(services, ensure_ascii=False)  # Возвращаем JSON
+    return json.dumps(services, ensure_ascii=False)  # Возвращаем JSON
