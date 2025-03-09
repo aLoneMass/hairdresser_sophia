@@ -54,7 +54,7 @@ def get_ai_response(user_id, user_message):
             tool_outputs = []
 
             for tool in tool_calls:
-                from bot.google_sheets import get_services  # Импортируем функцию из google_sheets.py
+                from bot.google_sheets import get_services, get_service_names  # Импортируем функцию из google_sheets.py
 
                 if tool.function.name == "read_service_list":
                     from bot.google_sheets import get_service_names  # Добавляем импорт новой функции
