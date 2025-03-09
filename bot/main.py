@@ -1,29 +1,26 @@
+import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import Message
-import asyncio
-
 from config.config import TOKEN
-from bot.ai_assistant import get_ai_response  # Подключаем OpenAI API
+from bot.ai_assistant import get_ai_response
 
-# Создаём бота и диспетчер
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 # Обработчик команды /start
 @dp.message(Command("start"))
 async def start_command(message: Message):
-    response = get_ai_response("Привет! Какие услуги у вас есть?")
-    await message.answer(response)
+    await message.answer("Привет! Я ваш виртуальный ассистент. Как могу помочь?")
 
-# Обработчик обычных сообщений (позже можно улучшить)
+# Обработчик всех сообщений (общение через OpenAI Assistants API)
 @dp.message()
-async def handle_message(message: Message):
-    response = get_ai_response(message.text)
+async def chat_with_ai(message: Message):
+    response = get_ai_response(message.from_user.id, message.text)
     await message.answer(response)
 
-# Запуск бота  
 async def main():
+    print("✅ Бот запущен и ждёт сообщений...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
