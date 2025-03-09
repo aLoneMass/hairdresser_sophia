@@ -11,7 +11,7 @@ def authenticate_google():
     Авторизация через OAuth 2.0 и сохранение токена.
     """
     flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-    creds = flow.run_local_server(port=0)  # Откроет браузер для авторизации
+    creds = flow.run_console()  # Запрашивает код в терминале
     return creds
 
 def get_services():
