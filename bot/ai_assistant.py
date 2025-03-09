@@ -7,8 +7,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_ORG_ID = os.getenv("OPENAI_ORG_ID")
 
 openai_client = openai.OpenAI(
-    api_key=OPENAI_API_KEY,
-    organization=OPENAI_ORG_ID
+    api_key=OPENAI_API_KEY
+    #organization=OPENAI_ORG_ID
     )
 
 def get_ai_response(user_message):
