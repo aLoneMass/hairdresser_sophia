@@ -16,7 +16,11 @@ async def start_command(message: Message):
 # Обработчик всех сообщений (общение через OpenAI Assistants API)
 @dp.message()
 async def chat_with_ai(message: Message):
+    # Показываем статус "печатает..."
+    await bot.send_chat_action(chat_id=message.chat.id, action="typing")
+    # Отправляем сообщение в OpenAI
     response = get_ai_response(message.from_user.id, message.text)
+    # Отвечаем пользователю
     await message.answer(response)
 
 async def main():

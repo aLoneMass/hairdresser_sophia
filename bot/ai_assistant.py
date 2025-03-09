@@ -1,25 +1,30 @@
 import openai
 import os
+import time
 from dotenv import load_dotenv
 
-# Загружаем ключи из .env
+# Загружаем переменные из .env
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ASSISTANT_ID = "asst_ItEAZFii2xydD7Yh2SZi6TIU"
+ASSISTANT_ID = os.getenv("ASSISTANT_ID")
 
 # Подключаем OpenAI API
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
-# Создаём сессию (тред) для каждого пользователя
+# Храним треды для пользователей (чтобы ассистент запоминал контекст)
 user_threads = {}
 
 def get_ai_response(user_id, user_message):
-    # Создаём новый тред, если его ещё нет
+    """
+    Отправляет сообщение ассистенту OpenAI и получает ответ.
+    """
+
+    # Если у пользователя нет треда, создаём новый
     if user_id not in user_threads:
         thread = client.beta.threads.create()
         user_threads[user_id] = thread.id
-    else:
-        thread_id = user_threads[user_id]
+
+    thread_id = user_threads[user_id]
 
     # Отправляем сообщение ассистенту
     client.beta.threads.messages.create(
@@ -28,13 +33,13 @@ def get_ai_response(user_id, user_message):
         content=user_message
     )
 
-    # Запрашиваем ответ от ассистента
+    # Запускаем ассистента на этом треде
     run = client.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id=ASSISTANT_ID
     )
 
-    # Ожидаем завершения обработки (можно улучшить через WebSocket)
+    # Ожидаем завершения обработки
     while True:
         run_status = client.beta.threads.runs.retrieve(
             thread_id=thread_id,
@@ -42,6 +47,7 @@ def get_ai_response(user_id, user_message):
         )
         if run_status.status == "completed":
             break
+        time.sleep(1)  # Ждём 1 секунду перед проверкой статуса
 
     # Получаем ответ от ассистента
     messages = client.beta.threads.messages.list(thread_id=thread_id)
@@ -49,4 +55,4 @@ def get_ai_response(user_id, user_message):
         if msg.role == "assistant":
             return msg.content[0].text.value  # Возвращаем текст ответа
 
-    return "Ошибка при получении ответа от ассистента."
+    return "Ошибка: ассистент не дал ответа."
