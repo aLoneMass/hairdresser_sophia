@@ -57,11 +57,16 @@ def get_ai_response(user_id, user_message):
                 from bot.google_sheets import get_services  # Импортируем функцию из google_sheets.py
 
                 if tool.function.name == "read_service_list":
-                    services = get_services()  # Получаем данные из Google Таблицы
-                    tool_outputs.append({
-                        "tool_call_id": tool.id,
-                        "output": f'{{"services": {services}}}'  # Форматируем как JSON-строку
-                    })
+                    from bot.google_sheets import get_service_names  # Добавляем импорт новой функции
+
+                    if tool.function.name == "read_service_list":
+                        service_list = get_service_names()  # Получаем только названия услуг
+                        tool_outputs.append({
+                            "tool_call_id": tool.id,
+                            "output": f'{{"services": "{service_list}"}}'
+                        })
+
+                    
 
             # Отправляем результат OpenAI
             client.beta.threads.runs.submit_tool_outputs(
