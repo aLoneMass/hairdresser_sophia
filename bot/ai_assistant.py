@@ -54,11 +54,13 @@ def get_ai_response(user_id, user_message):
             tool_outputs = []
 
             for tool in tool_calls:
+                from bot.google_sheets import get_services  # Импортируем функцию из google_sheets.py
+
                 if tool.function.name == "read_service_list":
-                    # Возвращаем фиктивные данные об услугах
+                    services = get_services()  # Получаем данные из Google Таблицы
                     tool_outputs.append({
                         "tool_call_id": tool.id,
-                        "output": '{"services": ["Маникюр", "Педикюр", "Окрашивание волос", "Массаж"]}'
+                        "output": f'{{"services": {services}}}'  # Форматируем как JSON-строку
                     })
 
             # Отправляем результат OpenAI

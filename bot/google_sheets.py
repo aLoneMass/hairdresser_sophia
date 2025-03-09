@@ -29,8 +29,11 @@ def get_services():
 
     services = []
     for row in data:
-        services.append(
-            f"📌 *{row['Название']}*\n💬 {row['Описание']}\n💰 Цена: {row['Стоимость']} руб.\n⏳ Время: {row['Временной слот']} мин\n"
-        )
+        services.append({
+            "name": row["Название"],
+            "description": row["Описание"],
+            "price": row["Стоимость"],
+            "duration": row["Временной слот"]
+        })
 
-    return "\n\n".join(services) if services else "В таблице пока нет услуг."
+     return json.dumps(services, ensure_ascii=False)  # Возвращаем JSON
