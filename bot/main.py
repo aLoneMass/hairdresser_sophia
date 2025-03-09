@@ -23,6 +23,11 @@ async def chat_with_ai(message: Message):
     # Отвечаем пользователю
     await message.answer(response)
 
+@dp.message(Command("services"))
+async def services_command(message: Message):
+    services = get_services()
+    await message.answer(services, parse_mode="Markdown")
+
 async def main():
     print("✅ Бот запущен и ждёт сообщений...")
     await dp.start_polling(bot)
